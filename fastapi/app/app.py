@@ -13,7 +13,7 @@ origins = [
 ]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -21,8 +21,16 @@ app.add_middleware(
 @app.post("/api/images", tags=["images"])
 async def get_images(info: dict):
     print(info)
-    text = info["Name"]
 
+    if info["Club"] == "DM":
+        im = Image.open("fastapi//resources//DM.png")
+        img_byte_arr = io.BytesIO()
+        im.save(img_byte_arr, format='PNG')
+        img_byte_arr = img_byte_arr.getvalue()
+        return Response(img_byte_arr)
+
+    
+    text = info["Name"]
     reshaped_text = arabic_reshaper.reshape(text)
     bidi_text = get_display(reshaped_text)
 
@@ -63,7 +71,7 @@ def get_image_path(text):
         color = '#3E8B91'
     elif text == "IEEE":
         path = "fastapi//resources//IEEE.png"
-        color = '#ffffff'
+        color = 'white'
     return path, color
 
 def get_font_size(text, width):
@@ -111,19 +119,17 @@ def get_font_size(text, width):
             height = 1170
     elif text == "IEEE":
         if width <= 300:
-            size = 50
-            height = 1135
+            size = 45
+            height = 675
         elif width <= 450:
             size = 35
-            height = 1145
+            height = 685
         elif width <= 600:
             size = 25
-            height = 1155
-        elif width <= 750:
+            height = 685
+        elif width > 600:
             size = 20
-            height = 1170
-        elif width > 750:
-            size = 15
-            height = 1170
+            height = 690
+
     return size, height
     
