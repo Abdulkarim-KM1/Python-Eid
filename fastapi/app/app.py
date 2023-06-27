@@ -61,6 +61,9 @@ def get_image_path(text):
     elif text == "Law":
         path = "fastapi//resources//Law.png"
         color = '#3E8B91'
+    elif text == "IEEE":
+        path = "fastapi//resources//IEEE.png"
+        color = '#ffffff'
     return path, color
 
 def get_font_size(text, width):
@@ -91,6 +94,22 @@ def get_font_size(text, width):
             size = 50
             height = 2200
     elif text == "Law":
+        if width <= 300:
+            size = 50
+            height = 1135
+        elif width <= 450:
+            size = 35
+            height = 1145
+        elif width <= 600:
+            size = 25
+            height = 1155
+        elif width <= 750:
+            size = 20
+            height = 1170
+        elif width > 750:
+            size = 15
+            height = 1170
+    elif text == "IEEE":
         if width <= 300:
             size = 50
             height = 1135
