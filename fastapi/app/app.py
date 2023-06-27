@@ -3,10 +3,22 @@ from fastapi import FastAPI, Response # pip install fastapi
 import arabic_reshaper #pip install arabic-reshaper 
 from bidi.algorithm import get_display  # pip install python-bidi
 from PIL import Image, ImageFont, ImageDraw # pip install pillow
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-@app.post("/", tags=["images"])
+origins = [
+    "http://localhost",
+    "http://localhost:3000",
+]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+@app.post("/api/images", tags=["images"])
 async def get_images(info: dict):
     print(info)
     text = info["Name"]
@@ -34,7 +46,8 @@ async def get_images(info: dict):
     img_byte_arr = io.BytesIO()
     im.save(img_byte_arr, format='PNG')
     img_byte_arr = img_byte_arr.getvalue()
-    return Response(img_byte_arr, media_type="image/png")
+    return Response(img_byte_arr)
+    # , media_type="image/png"
 
 
 
